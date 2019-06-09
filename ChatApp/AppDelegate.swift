@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import Firebase        //追加
+import GoogleSignIn//追加
+
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,7 +18,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
         // Override point for customization after application launch.
+        FirebaseApp.configure()// <-- 追加
+        GIDSignIn.sharedInstance()?.clientID = FirebaseApp.app()?.options.clientID // <-- 追加
         return true
     }
 
@@ -40,6 +46,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
+    /* さらにここから追加 */
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        return (GIDSignIn.sharedInstance()?.handle(
+            url,
+            sourceApplication: options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String,
+            annotation: [:]
+            )
+            )!
+    }
+    
+    /* ここまで追加 */
+
 
 
 }
